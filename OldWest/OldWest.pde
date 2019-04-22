@@ -6,7 +6,8 @@ import ddf.minim.spi.*;
 import ddf.minim.ugens.*;
 
 Minim minim;
-AudioPlayer player;
+AudioPlayer yeeHawPlayer;
+AudioPlayer walkingPlayer;
 
 float lowerL = -800;
 float upperL = 800; 
@@ -40,7 +41,8 @@ void setup() {
   for (int i = 0; i < weeds.length; i++) weeds[i] = new Tumbleweed(upperL, lowerL, createShape(SPHERE,20), loadImage("weed.jpg"));
   translate(width/2, height/2);
   pushMatrix();
-  player = minim.loadFile("yeehaw.mp3");
+  yeeHawPlayer = minim.loadFile("yeehaw.mp3");
+  walkingPlayer = minim.loadFile("walking.mp3");
   //player.play();
 }
 
@@ -86,16 +88,23 @@ void draw() {
 void movement(){
   if(key == 'w' || keyCode == UP){
      //go forward
-     if(keyPressed)eyeZ -= 5;
+     if(keyPressed){
+       eyeZ -= 5;
+       playWalkingSound();
+     }
    }
    if(key == 's' || keyCode == DOWN){
      //go backwards
-     if(keyPressed) eyeZ += 5;
+     if(keyPressed) {
+       eyeZ += 5;
+       playWalkingSound();
+     }
    }
    if(key == 'a' || keyCode == LEFT){
      //strafe left
      if(keyPressed) {
        centerX -= 10;
+       playWalkingSound();
        //eyeX -= 5;
      }
    }
@@ -104,8 +113,19 @@ void movement(){
      if(keyPressed) {
        //eyeX += 5;
        centerX += 10;
+       playWalkingSound();
      }
    }
+   walkingPlayer.pause();
+}
+
+void playWalkingSound(){
+  walkingPlayer.rewind();
+  walkingPlayer.play();
+  if(!walkingPlayer.isPlaying()) {
+    walkingPlayer.rewind(); 
+    walkingPlayer.play();
+  } 
 }
 
 void keyPressed(){  
@@ -114,8 +134,8 @@ void keyPressed(){
     eyeZ = -eyeZ;
   }
   if (key == ' ') {
-    player.rewind();
-    player.play();
+    yeeHawPlayer.rewind();
+    yeeHawPlayer.play();
   }
 }
 
@@ -124,7 +144,8 @@ void exit() {
 }
 
 void stop(){
- player.close();
+ yeeHawPlayer.close();
+ walkingPlayer.close();
  minim.stop();
  super.stop();
 }
