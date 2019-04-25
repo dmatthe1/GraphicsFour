@@ -65,7 +65,8 @@ void draw() {
   
   fill(255);
   for (Bird b : flock) {
-    b.render();
+    b.update();
+    b.display();
   }
   movement();
   
