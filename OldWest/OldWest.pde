@@ -21,7 +21,7 @@ float bgY;
 float bgZ;
 boolean isDay;
 
-
+Bird[] flock = new Bird[10];
 Tumbleweed[] weeds = new Tumbleweed[100];
 
 void setup() {
@@ -39,6 +39,8 @@ void setup() {
   isDay = true;
   //Tumbleweed Additions
   for (int i = 0; i < weeds.length; i++) weeds[i] = new Tumbleweed(upperL, lowerL, createShape(SPHERE,20), loadImage("weed.jpg"));
+  for (int i = 0; i < flock.length; i++) flock[i] = new Bird();
+  
   translate(width/2, height/2);
   pushMatrix();
   yeeHawPlayer = minim.loadFile("yeehaw.mp3");
@@ -57,8 +59,13 @@ void draw() {
   box(1095, 1, 2325);
    //Star System Drawing
   for (Tumbleweed weed : weeds) {
-    weed.update();
-    weed.show();
+    //weed.update();
+    //weed.show();
+  }
+  
+  fill(255);
+  for (Bird b : flock) {
+    b.render();
   }
   movement();
   
