@@ -20,7 +20,7 @@ float bgX;
 float bgY;
 float bgZ;
 boolean isDay;
-
+boolean turnedAround;
 
 Tumbleweed[] weeds = new Tumbleweed[100];
 
@@ -32,11 +32,12 @@ void setup() {
   eyeY = 306;
   eyeZ = height+30;
   centerX = 364;
-  centerY = 163;
+  centerY = 163-85;
   bgX = 149;
   bgY = 202;
   bgZ = 255;
   isDay = true;
+  turnedAround = false;
   //Tumbleweed Additions
   for (int i = 0; i < weeds.length; i++) weeds[i] = new Tumbleweed(upperL, lowerL, createShape(SPHERE,20), loadImage("weed.jpg"));
   translate(width/2, height/2);
@@ -48,19 +49,39 @@ void setup() {
 
 void draw() {
   background(bgX, bgY, bgZ);
-  camera(eyeX+1, eyeY+104, eyeZ+1,centerX+1, centerY+-22, 0, 0, 1, 0);
+  camera(eyeX+1, eyeY+-42, eyeZ+1,centerX+1, centerY+1, 0, 0, 1, 0);
+  fill(255, 0, 0);
+  
+  pushMatrix();
+  ellipse(centerX+1, centerY+179, 50, 50);
+  popMatrix();
+
   noFill();
   translate(411, 482);
   //texture(loadImage("dirt.jpg"));
+
   stroke(202, 141, 66);
   fill(202, 141, 66);
   box(1095, 1, 2325);
-   //Star System Drawing
+  
+  for(int i = 0; i < 4; i ++){
+    stroke(244, 71, 79);
+    fill(0, 100, 100);
+    pushMatrix();
+    translate(425, -114, -128 + i*324);
+    box(308, 222, 276);
+    popMatrix();
+  }
+  //Star System Drawing
+   
+  //TexturedCube(loadImage("woodTexture.jpg"));
+  
   for (Tumbleweed weed : weeds) {
     weed.update();
     weed.show();
   }
   movement();
+  playWalkingSound();
   
   if(int(random(0, 55)) == 1){
     //day night cycle
@@ -89,49 +110,87 @@ void movement(){
   if(key == 'w' || keyCode == UP){
      //go forward
      if(keyPressed){
-       eyeZ -= 5;
-       playWalkingSound();
+       if(!turnedAround)eyeZ -= 5;
+       else eyeZ += 5;
+       //playWalkingSound();
      }
    }
    if(key == 's' || keyCode == DOWN){
      //go backwards
      if(keyPressed) {
-       eyeZ += 5;
-       playWalkingSound();
+       if(!turnedAround)eyeZ += 5;
+       else eyeZ -= 5;
+       //playWalkingSound();
      }
    }
    if(key == 'a' || keyCode == LEFT){
      //strafe left
      if(keyPressed) {
-       centerX -= 10;
-       playWalkingSound();
-       //eyeX -= 5;
+       if(!turnedAround)centerX -= 10;
+       else centerX += 10;
+       //eyeX += 10;
+       //playWalkingSound();
      }
    }
    if(key == 'd' || keyCode == RIGHT){
      //strafe right
      if(keyPressed) {
-       //eyeX += 5;
-       centerX += 10;
-       playWalkingSound();
+       //eyeX -= 10;
+       if(!turnedAround)centerX += 10;
+       else centerX -= 10;
+       //playWalkingSound();
      }
    }
-   walkingPlayer.pause();
+   
+   if(key == 'e'){
+     //strafe right
+     if(keyPressed){
+       if(!turnedAround){
+         centerX += 10;
+         eyeX += 10;
+       }
+       else{
+         centerX -= 10;
+         eyeX -= 10;
+       }
+     }
+   }
+   if(key == 'q'){
+     //strafe left
+     if(keyPressed){
+       if(!turnedAround){
+         centerX -= 10;
+         eyeX -= 10;
+       }
+       else{
+         centerX += 10;
+         eyeX += 10;
+       }
+     }
+   }
+   //walkingPlayer.pause();
 }
 
 void playWalkingSound(){
-  walkingPlayer.rewind();
-  walkingPlayer.play();
-  if(!walkingPlayer.isPlaying()) {
-    walkingPlayer.rewind(); 
+  if(keyPressed){
+    walkingPlayer.rewind();
     walkingPlayer.play();
-  } 
+    if(!(walkingPlayer.isPlaying())) {
+      walkingPlayer.rewind(); 
+      walkingPlayer.play();
+    }
+  }
+  else{
+   walkingPlayer.pause(); 
+  }
 }
 
 void keyPressed(){  
   if(key == 'r'){
     //turn around
     eyeZ = -eyeZ;
+    if(turnedAround) turnedAround = false;
+    else turnedAround = true;
   }
   if (key == ' ') {
     yeeHawPlayer.rewind();
