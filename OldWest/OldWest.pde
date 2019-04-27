@@ -34,7 +34,7 @@ void setup() {
   eyeY = 306;
   eyeZ = height+30;
   centerX = 364;
-  centerY = 163-85;
+  centerY = 78;
   bgX = 149;
   bgY = 202;
   bgZ = 255;
@@ -62,23 +62,39 @@ void draw() {
 
   noFill();
   translate(411, 482);
-  //texture(loadImage("dirt.jpg"));
-
+  
+  //ground
   stroke(202, 141, 66);
   fill(202, 141, 66);
-  box(1095, 1, 2325);
+  box(8000, 1,8000);
   
-  for(int i = 0; i < 4; i ++){
+  for(int i = 0; i < 5; i ++){
     stroke(244, 71, 79);
     fill(0, 100, 100);
     pushMatrix();
-    translate(425, -114, -128 + i*324);
+    translate(429, -114, -400 + i*388);
+    box(308, 222, 276);
+    popMatrix();
+    pushMatrix();
+    translate(-631, -114, -400 + i*388);
     box(308, 222, 276);
     popMatrix();
   }
-  //Star System Drawing
-   
+  
+  pushMatrix();
+  textSize(32);
+  fill(0);
+  text("Welcome to the Old West", -280, -150, -322);
+  popMatrix();
+  
   //TexturedCube(loadImage("woodTexture.jpg"));
+  
+  pushMatrix();
+  //Water Tower
+  translate(454, -235, -925);
+  Cylinder cyl = new Cylinder("waterTower", 207, 642, 30, loadImage("metal.jpg"));
+  cyl.display();
+  popMatrix();
   
   for (Tumbleweed weed : weeds) {
     //weed.update();
