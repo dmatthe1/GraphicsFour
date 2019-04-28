@@ -48,8 +48,7 @@ void setup() {
   bgX = 149;
   bgY = 202;
   bgZ = 255;
-  
-  
+
   //Tumbleweed and Bird Inits
   for (int i = 0; i < weeds.length; i++) weeds[i] = new Tumbleweed(upperL, lowerL, createShape(SPHERE,20), loadImage("weed.jpg"));
   for (int i = 0; i < flock.length; i++) flock[i] = new Bird();
@@ -73,7 +72,9 @@ void draw() {
   noFill();
   
   //Camera Settings
+  pushMatrix();
   camera(eyeX+1, eyeY+-42, eyeZ+1,centerX+1, centerY+1, 0, 0, 1, 0);
+  popMatrix();
 
   translate(411, 482);
   
@@ -195,14 +196,12 @@ void movement(){
      if(keyPressed) {
        if(!turnedAround)centerX -= 10;
        else centerX += 10;
-       //eyeX += 10;
        //playWalkingSound();
      }
    }
    if(key == 'd' || keyCode == RIGHT){
      //strafe right
      if(keyPressed) {
-       //eyeX -= 10;
        if(!turnedAround)centerX += 10;
        else centerX -= 10;
        //playWalkingSound();
