@@ -82,16 +82,29 @@ void draw() {
   fill(202, 141, 66);
   box(8000, 1,8000);
   
+  //houses
   for(int i = 0; i < 10; i ++){
+
     stroke(244, 71, 79);
     fill(0, 100, 100);
     pushMatrix();
     translate(429, -114, -400 + i*388);
     box(308, 222, 276);
+    translate(0, -261, -12);
+    rotateX(degrees(61));
+    Pyramid pyr1 = new Pyramid(150, new PVector(127, 79, 98), new PVector(214, 78, 98));
+    pyr1.display();
     popMatrix();
+    
+    stroke(244, 71, 79);
+    fill(0, 100, 100);
     pushMatrix();
     translate(-631, -114, -400 + i*388);
     box(308, 222, 276);
+    translate(0, -262, -12);
+    rotateX(degrees(61));
+    Pyramid pyr2 = new Pyramid(150, new PVector(127, 79, 98), new PVector(214, 78, 98));
+    pyr2.display();
     popMatrix();
   }
    
@@ -109,9 +122,10 @@ void draw() {
   
   for (TexturePlanet planet : system) {
      pushMatrix();
+     translate(-162, -404, 265);
      rotateY(planet.speed * theta);
      translate(0, planet.translation);
-     planet.display();
+     if(isDay) planet.display();
      popMatrix();
   }
   
