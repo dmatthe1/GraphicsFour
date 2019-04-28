@@ -1,18 +1,22 @@
+float lowerX = -2500;
+float upperX = 2500;
+float lowerY = -500;
+float upperY = -1500;
 PVector bodySize = new PVector(10, 10, 40);
 PVector wingSize = new PVector(40, 1, bodySize.z);
 
 class Bird {
-  
-  PVector loc, vel;  
+  PVector loc;
+  PVector vel;  
   
   Bird(){
-    loc = new PVector(random(-width / 2, width / 2), random(-height / 2, height / 2), random(-height / 2, height / 2));
+    loc = new PVector(random(lowerX, upperX), random(lowerY, upperY), 0);
     vel = new PVector(random(-1, 1), random(-1, 1), random(-1, 1));
     vel.normalize();
-    vel.mult(3);
   }
   
   void display(){
+    fill(255, 0, 0);
     pushMatrix();
     translate(loc.x, loc.y, loc.z);
     rotateY(atan2(vel.x, vel.z));
@@ -33,13 +37,6 @@ class Bird {
   
   void update(){
     loc.add(vel);
-    if(loc.x < -width / 2) loc.x += width;
-    if(loc.y < -height / 2) loc.y += height;
-    if(loc.z < -height / 2) loc.z += height;
-    if(loc.x > width / 2) loc.x -= width;
-    if(loc.y > height / 2) loc.y -= height;
-    if(loc.z > height / 2) loc.z -= height;
-
+    if(loc.x > upperX || loc.x < lowerX || loc.y > lowerY || loc.y < upperY) vel.mult(-1);
   }
-  
 }

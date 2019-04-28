@@ -61,6 +61,8 @@ void draw() {
   popMatrix();
 
   noFill();
+  
+  
   translate(411, 482);
   //texture(loadImage("dirt.jpg"));
 
@@ -78,6 +80,11 @@ void draw() {
   }
   //Star System Drawing
    
+   
+  for (Bird b : flock) {
+    b.update();
+    b.display();
+  }
   //TexturedCube(loadImage("woodTexture.jpg"));
   
   for (Tumbleweed weed : weeds) {
@@ -86,10 +93,7 @@ void draw() {
   }
   
   fill(255);
-  for (Bird b : flock) {
-    b.update();
-    b.display();
-  }
+  
   movement();
   playWalkingSound();
   
