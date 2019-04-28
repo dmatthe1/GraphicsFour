@@ -5,10 +5,13 @@ import ddf.minim.signals.*;
 import ddf.minim.spi.*;
 import ddf.minim.ugens.*;
 
+//Sound Players
 Minim minim;
 AudioPlayer yeeHawPlayer;
 AudioPlayer walkingPlayer;
+AudioPlayer oldTownPlayer;
 
+//Global Variables
 float lowerL = -800;
 float upperL = 800; 
 float eyeX;
@@ -21,56 +24,65 @@ float bgY;
 float bgZ;
 boolean isDay;
 boolean turnedAround;
+float theta = 0;
 
-
+//System Variables
 Bird[] flock = new Bird[10];
 Tumbleweed[] weeds = new Tumbleweed[100];
+ArrayList<TexturePlanet> system = new ArrayList<TexturePlanet>();
 
 void setup() {
-  size(800,800,P3D);
-  
+  size(800,800,P3D); 
   minim = new Minim(this);
+  isDay = true;
+  turnedAround = false;
+  
+  //Camera Variables
   eyeX = 342;
   eyeY = 306;
   eyeZ = height+30;
   centerX = 364;
   centerY = 78;
+  
+  //Starting Colors
   bgX = 149;
   bgY = 202;
   bgZ = 255;
-  isDay = true;
-  turnedAround = false;
-  //Tumbleweed Additions
+  
+  
+  //Tumbleweed and Bird Inits
   for (int i = 0; i < weeds.length; i++) weeds[i] = new Tumbleweed(upperL, lowerL, createShape(SPHERE,20), loadImage("weed.jpg"));
   for (int i = 0; i < flock.length; i++) flock[i] = new Bird();
+  system.add(new TexturePlanet("Sun", 500, 60, loadImage("sun.jpg"), 10, -1000));
+  
+  //Players
+  yeeHawPlayer = minim.loadFile("yeehaw.mp3");
+  walkingPlayer = minim.loadFile("walking.mp3");
+  oldTownPlayer = minim.loadFile("song.mp3");
   
   translate(width/2, height/2);
   pushMatrix();
-  yeeHawPlayer = minim.loadFile("yeehaw.mp3");
-  walkingPlayer = minim.loadFile("walking.mp3");
-  //player.play();
 }
 
 void draw() {
-  background(bgX, bgY, bgZ);
-  camera(eyeX+1, eyeY+-42, eyeZ+1,centerX+1, centerY+1, 0, 0, 1, 0);
-  fill(255, 0, 0);
+  //Background music
+  oldTownPlayer.play();
   
-  pushMatrix();
-  ellipse(centerX+1, centerY+179, 50, 50);
-  popMatrix();
-
+  //Background Settings
+  background(bgX, bgY, bgZ);
   noFill();
   
-  
+  //Camera Settings
+  camera(eyeX+1, eyeY+-42, eyeZ+1,centerX+1, centerY+1, 0, 0, 1, 0);
+
   translate(411, 482);
   
-  //ground
+  //Ground
   stroke(202, 141, 66);
   fill(202, 141, 66);
   box(8000, 1,8000);
   
-  for(int i = 0; i < 5; i ++){
+  for(int i = 0; i < 10; i ++){
     stroke(244, 71, 79);
     fill(0, 100, 100);
     pushMatrix();
@@ -82,38 +94,47 @@ void draw() {
     box(308, 222, 276);
     popMatrix();
   }
-  //Star System Drawing
    
-   
-  for (Bird b : flock) {
-    b.update();
-    b.display();
+  //Birds
+  for (Bird bird : flock) {
+    bird.update();
+    bird.display();
   }
   
+  //Weeds
+  for (Tumbleweed weed : weeds) {
+    weed.update();
+    weed.show();
+  }
+  
+  for (TexturePlanet planet : system) {
+     pushMatrix();
+     rotateY(planet.speed * theta);
+     translate(0, planet.translation);
+     planet.display();
+     popMatrix();
+  }
+  
+  //Text
   pushMatrix();
-  textSize(32);
+  textSize(200);
   fill(0);
-  text("Welcome to the Old West", -280, -150, -322);
+  text("Welcome to the Old West", -1500, -1000, -2000);
   popMatrix();
   
-  //TexturedCube(loadImage("woodTexture.jpg"));
-  
-  pushMatrix();
   //Water Tower
+  pushMatrix();
   translate(454, -235, -925);
   Cylinder cyl = new Cylinder("waterTower", 207, 642, 30, loadImage("metal.jpg"));
   cyl.display();
   popMatrix();
   
-  for (Tumbleweed weed : weeds) {
-    //weed.update();
-    //weed.show();
-  }
-  
   fill(255);
   
   movement();
   playWalkingSound();
+  
+  theta += 0.01;
   
   if(int(random(0, 55)) == 1){
     //day night cycle
