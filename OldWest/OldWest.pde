@@ -19,6 +19,7 @@ float eyeY;
 float eyeZ;
 float centerX;
 float centerY;
+float centerZ;
 float bgX;
 float bgY;
 float bgZ;
@@ -39,10 +40,11 @@ void setup() {
   
   //Camera Variables
   eyeX = 342;
-  eyeY = 306;
+  eyeY = 264;
   eyeZ = height+30;
   centerX = 364;
   centerY = 78;
+  centerZ = 0;
   
   //Starting Colors
   bgX = 149;
@@ -72,7 +74,7 @@ void draw() {
   noFill();
   
   //Camera Settings
-  camera(eyeX+1, eyeY+-42, eyeZ+1,centerX+1, centerY+1, 0, 0, 1, 0);
+  camera(eyeX, eyeY, eyeZ,centerX, centerY, centerZ+1, 0, 1, 0);
 
 
   translate(411, 482);
@@ -184,17 +186,27 @@ void movement(){
   if(key == 'w' || keyCode == UP){
      //go forward
      if(keyPressed){
-       if(!turnedAround)eyeZ -= 5;
-       else eyeZ += 5;
-       //playWalkingSound();
+       if(!turnedAround){
+         eyeZ -= 5;
+         centerZ -= 5;
+       }
+       else {
+         eyeZ += 5;
+         centerZ += 5;
+       }
      }
    }
    if(key == 's' || keyCode == DOWN){
      //go backwards
      if(keyPressed) {
-       if(!turnedAround)eyeZ += 5;
-       else eyeZ -= 5;
-       //playWalkingSound();
+       if(!turnedAround){
+         eyeZ += 5;
+         centerZ += 5;
+       }
+       else {
+         eyeZ -= 5;
+         centerZ -= 5;
+       }
      }
    }
    if(key == 'a' || keyCode == LEFT){
@@ -202,7 +214,6 @@ void movement(){
      if(keyPressed) {
        if(!turnedAround)centerX -= 10;
        else centerX += 10;
-       //playWalkingSound();
      }
    }
    if(key == 'd' || keyCode == RIGHT){
@@ -210,7 +221,6 @@ void movement(){
      if(keyPressed) {
        if(!turnedAround)centerX += 10;
        else centerX -= 10;
-       //playWalkingSound();
      }
    }
    
