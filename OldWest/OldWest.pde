@@ -255,7 +255,6 @@ void movement(){
 
 void playWalkingSound(){
   if(keyPressed){
-
     walkingPlayer.play();
     if(!(walkingPlayer.isPlaying())) {
       walkingPlayer.rewind(); 
