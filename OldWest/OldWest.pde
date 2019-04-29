@@ -48,7 +48,7 @@ void setup() {
   bgX = 149;
   bgY = 202;
   bgZ = 255;
-
+  
   //Tumbleweed and Bird Inits
   for (int i = 0; i < weeds.length; i++) weeds[i] = new Tumbleweed(upperL, lowerL, createShape(SPHERE,20), loadImage("weed.jpg"));
   for (int i = 0; i < flock.length; i++) flock[i] = new Bird();
@@ -72,17 +72,23 @@ void draw() {
   noFill();
   
   //Camera Settings
-  pushMatrix();
   camera(eyeX+1, eyeY+-42, eyeZ+1,centerX+1, centerY+1, 0, 0, 1, 0);
-  popMatrix();
+
 
   translate(411, 482);
   
   //Ground
+  
   stroke(202, 141, 66);
   fill(202, 141, 66);
   box(8000, 1,8000);
-  
+  /*
+  pushMatrix();
+  rotateX(degrees(141));
+  TextureRect ground = new TextureRect(loadImage("dirt.jpg"), 8000, 8000);
+  ground.display();
+  popMatrix();
+  */
   //houses
   for(int i = 0; i < 10; i ++){
 
@@ -123,7 +129,7 @@ void draw() {
   
   for (TexturePlanet planet : system) {
      pushMatrix();
-     translate(-162, -404, 265);
+     translate(-162, -1310, 265);
      rotateY(planet.speed * theta);
      translate(0, planet.translation);
      if(isDay) planet.display();
