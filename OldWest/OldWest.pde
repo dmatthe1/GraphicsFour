@@ -245,7 +245,7 @@ void movement(){
 
 void playWalkingSound(){
   if(keyPressed){
-    walkingPlayer.rewind();
+
     walkingPlayer.play();
     if(!(walkingPlayer.isPlaying())) {
       walkingPlayer.rewind(); 
@@ -266,6 +266,7 @@ void keyPressed(){
   }
   if (key == ' ') {
     yeeHawPlayer.rewind();
+    yeeHawPlayer.skip(2450);
     yeeHawPlayer.play();
   }
 }
