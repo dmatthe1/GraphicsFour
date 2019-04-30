@@ -14,18 +14,23 @@ AudioPlayer oldTownPlayer;
 //Global Variables
 float lowerL = -800;
 float upperL = 800; 
-float eyeX;
-float eyeY;
-float eyeZ;
-float centerX;
-float centerY;
-float centerZ;
+
+PVector eyeVect;
+PVector centerVect;
+PVector upVect;
+
 float bgX;
 float bgY;
 float bgZ;
+float s;
 boolean isDay;
-boolean turnedAround;
 float theta = 0;
+float angle;
+PImage groundImage;
+PImage metal;
+
+PVector look;
+PVector side;
 
 //System Variables
 Bird[] flock = new Bird[10];
@@ -36,21 +41,24 @@ void setup() {
   size(800,800,P3D); 
   minim = new Minim(this);
   isDay = true;
-  turnedAround = false;
-  
+  groundImage = loadImage("dirt.jpg");
   //Camera Variables
-  eyeX = 342;
-  eyeY = 264;
-  eyeZ = height+30;
-  centerX = 364;
-  centerY = 78;
-  centerZ = 0;
+  eyeVect = new PVector(342, 264, height+30);
+  centerVect = new PVector(364, 78, 0);
+  upVect = new PVector(0, 1, 0);
   
   //Starting Colors
   bgX = 149;
   bgY = 202;
   bgZ = 255;
-  
+
+  angle = 0;
+  s = 5;
+  look = new PVector(0, 0, 0);
+  side = new PVector(0, 0, 0);
+  look.normalize();
+  side.normalize();
+
   //Tumbleweed and Bird Inits
   for (int i = 0; i < weeds.length; i++) weeds[i] = new Tumbleweed(upperL, lowerL, createShape(SPHERE,20), loadImage("weed.jpg"));
   for (int i = 0; i < flock.length; i++) flock[i] = new Bird();
@@ -60,6 +68,8 @@ void setup() {
   yeeHawPlayer = minim.loadFile("yeehaw.mp3");
   walkingPlayer = minim.loadFile("walking.mp3");
   oldTownPlayer = minim.loadFile("song.mp3");
+  
+  metal = loadImage("metal.jpg");
   
   translate(width/2, height/2);
   pushMatrix();
@@ -72,25 +82,32 @@ void draw() {
   //Background Settings
   background(bgX, bgY, bgZ);
   noFill();
-  
-  //Camera Settings
-  camera(eyeX, eyeY, eyeZ,centerX, centerY, centerZ+1, 0, 1, 0);
 
+  //Camera Settings
+  camera(eyeVect.x, eyeVect.y, eyeVect.z, centerVect.x, centerVect.y, centerVect.z, upVect.x, upVect.y, upVect.z);
 
   translate(411, 482);
   
   //Ground
-  
+  /*
   stroke(202, 141, 66);
   fill(202, 141, 66);
   box(8000, 1,8000);
-  /*
-  pushMatrix();
-  rotateX(degrees(141));
-  TextureRect ground = new TextureRect(loadImage("dirt.jpg"), 8000, 8000);
-  ground.display();
-  popMatrix();
   */
+  pushMatrix();
+  rotateX(degrees(141.053));
+  TextureRect ground = new TextureRect(groundImage, 8000, 8000);
+  ground.display();
+  /*
+  translate(0, 0, 4000);
+  TextureRect ground1 = new TextureRect(groundImage, 8000, 8000);
+  ground1.display();
+  translate(0, 0, -8000);
+  TextureRect ground2 = new TextureRect(groundImage, 8000, 8000);
+  ground2.display();
+  */
+  popMatrix();
+  
   //houses
   for(int i = 0; i < 10; i ++){
 
@@ -148,16 +165,38 @@ void draw() {
   //Water Tower
   pushMatrix();
   translate(454, -235, -925);
-  Cylinder cyl = new Cylinder("waterTower", 207, 642, 30, loadImage("metal.jpg"));
+  Cylinder cyl = new Cylinder("waterTower", 207, 642, 30, metal);
   cyl.display();
   popMatrix();
   
   fill(255);
-  
+
   movement();
   playWalkingSound();
   
+  
   theta += 0.01;
+  
+  look = (centerVect.copy()).sub(eyeVect.copy());
+  side = (look.copy()).cross(upVect.copy());
+  
+  if(mousePressed == true){
+    if(mouseButton == LEFT){
+      float diffX = mouseX - pmouseX;
+      if(diffX != 0){
+         angle = diffX/width;
+         //rotateAroundAxis(upVect, angle);
+      }
+    }
+    if(mouseButton == RIGHT){
+      float diffY = mouseY - pmouseY;
+      if(diffY != 0){
+         angle = diffY/width;
+         //rotateAroundAxis(
+      }
+    }
+  }
+
   
   if(int(random(0, 55)) == 1){
     //day night cycle
@@ -186,68 +225,62 @@ void movement(){
   if(key == 'w' || keyCode == UP){
      //go forward
      if(keyPressed){
-       if(!turnedAround){
-         eyeZ -= 5;
-         centerZ -= 5;
-       }
-       else {
-         eyeZ += 5;
-         centerZ += 5;
-       }
+       /*
+       eyeVect.z -= 5;
+       centerVect.z -= 5;
+       */
+       look.normalize();
+       eyeVect = (eyeVect.copy()).add(look.copy().mult(s));
+       centerVect = (centerVect.copy()).add(look.copy().mult(s));
      }
    }
    if(key == 's' || keyCode == DOWN){
      //go backwards
      if(keyPressed) {
-       if(!turnedAround){
-         eyeZ += 5;
-         centerZ += 5;
-       }
-       else {
-         eyeZ -= 5;
-         centerZ -= 5;
-       }
+       /*
+       eyeVect.z += 5;
+       centerVect.z += 5;
+       */
+       look.normalize();
+       eyeVect = (eyeVect.copy()).sub(look.copy().mult(s));
+       centerVect = (centerVect.copy()).sub(look.copy().mult(s));
      }
    }
    if(key == 'a' || keyCode == LEFT){
-     //strafe left
+     //turn left
      if(keyPressed) {
-       if(!turnedAround)centerX -= 10;
-       else centerX += 10;
+       /*
+       centerVect.x -= 10;
+       eyeVect.x -= 10;
+       */
+       side.normalize();
+       eyeVect = (eyeVect.copy()).sub(side.copy().mult(s));
+       centerVect = (centerVect.copy()).sub(side.copy().mult(s));
      }
    }
    if(key == 'd' || keyCode == RIGHT){
-     //strafe right
+     //turn right
      if(keyPressed) {
-       if(!turnedAround)centerX += 10;
-       else centerX -= 10;
+       /*
+       centerVect.x += 10;
+       eyeVect.x += 10;
+       */
+       side.normalize();
+       eyeVect = (eyeVect.copy()).add(side.copy().mult(s));
+       centerVect = (centerVect.copy()).add(side.copy().mult(s));
      }
    }
    
    if(key == 'e'){
      //strafe right
      if(keyPressed){
-       if(!turnedAround){
-         centerX += 10;
-         eyeX += 10;
-       }
-       else{
-         centerX -= 10;
-         eyeX -= 10;
-       }
+       centerVect.x += 10;
      }
    }
    if(key == 'q'){
      //strafe left
      if(keyPressed){
-       if(!turnedAround){
-         centerX -= 10;
-         eyeX -= 10;
-       }
-       else{
-         centerX += 10;
-         eyeX += 10;
-       }
+       centerVect.x -= 10;
      }
    }
    //walkingPlayer.pause();
@@ -267,17 +300,36 @@ void playWalkingSound(){
 }
 
 void keyPressed(){  
-  if(key == 'r'){
-    //turn around
-    eyeZ = -eyeZ;
-    if(turnedAround) turnedAround = false;
-    else turnedAround = true;
-  }
   if (key == ' ') {
     yeeHawPlayer.rewind();
     yeeHawPlayer.skip(2450);
     yeeHawPlayer.play();
   }
+}
+
+void rotateAroundAxis(PVector axis, float th){
+    PVector w = axis.copy();
+    w.normalize();
+    PVector t = w.copy();
+    if (abs(w.x) - min(abs(w.x), abs(w.y), abs(w.z)) < 0.001) {
+      t.x = 1;
+    } else if (abs(w.y) - min(abs(w.x), abs(w.y), abs(w.z)) < 0.001) {
+      t.y = 1;
+    } else if (abs(w.z) - min(abs(w.x), abs(w.y), abs(w.z)) < 0.001) {
+      t.z = 1;
+    }
+    PVector u = w.cross(t);
+    u.normalize();
+    PVector v = w.cross(u);
+    applyMatrix(u.x, v.x, w.x, 0, 
+                u.y, v.y, w.y, 0, 
+                u.z, v.z, w.z, 0, 
+                0.0, 0.0, 0.0, 1);
+    rotateZ(th);
+    applyMatrix(u.x, u.y, u.z, 0, 
+                v.x, v.y, v.z, 0, 
+                w.x, w.y, w.z, 0, 
+                0.0, 0.0, 0.0, 1);
 }
 
 void stop(){
