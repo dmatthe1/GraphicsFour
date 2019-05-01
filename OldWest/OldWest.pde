@@ -222,6 +222,11 @@ void draw() {
   }
 }
 
+void mouseWheel(MouseEvent event){
+  float e = event.getCount();
+  e*= 12;
+  centerVect.z += e;
+}
 
 void movement(){
   if(key == 'w' || keyCode == UP){
