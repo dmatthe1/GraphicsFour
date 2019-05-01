@@ -63,6 +63,7 @@ class Tumbleweed {
   }
   
   void show() {
+    noStroke();
     pushMatrix();
     translate(x, y, z);
     shape(model);
