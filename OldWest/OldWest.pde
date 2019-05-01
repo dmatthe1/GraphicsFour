@@ -184,15 +184,17 @@ void draw() {
     if(mouseButton == LEFT){
       float diffX = mouseX - pmouseX;
       if(diffX != 0){
-         angle = diffX/width;
+         //angle = diffX/width;
          //rotateAroundAxis(upVect, angle);
+         centerVect.x -= diffX;
       }
     }
     if(mouseButton == RIGHT){
       float diffY = mouseY - pmouseY;
       if(diffY != 0){
-         angle = diffY/width;
+         //angle = diffY/width;
          //rotateAroundAxis(
+         centerVect.y -= diffY;
       }
     }
   }
@@ -247,7 +249,7 @@ void movement(){
      }
    }
    if(key == 'a' || keyCode == LEFT){
-     //turn left
+     //strafe left
      if(keyPressed) {
        /*
        centerVect.x -= 10;
@@ -259,7 +261,7 @@ void movement(){
      }
    }
    if(key == 'd' || keyCode == RIGHT){
-     //turn right
+     //strafe right
      if(keyPressed) {
        /*
        centerVect.x += 10;
@@ -272,13 +274,13 @@ void movement(){
    }
    
    if(key == 'e'){
-     //strafe right
+     //turn right
      if(keyPressed){
        centerVect.x += 10;
      }
    }
    if(key == 'q'){
-     //strafe left
+     //turn left
      if(keyPressed){
        centerVect.x -= 10;
      }
