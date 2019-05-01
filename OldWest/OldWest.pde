@@ -33,7 +33,7 @@ PVector look;
 PVector side;
 
 //System Variables
-Bird[] flock = new Bird[10];
+Bird[] flock = new Bird[50];
 Tumbleweed[] weeds = new Tumbleweed[100];
 ArrayList<TexturePlanet> system = new ArrayList<TexturePlanet>();
 
@@ -89,23 +89,10 @@ void draw() {
   translate(411, 482);
   
   //Ground
-  /*
-  stroke(202, 141, 66);
-  fill(202, 141, 66);
-  box(8000, 1,8000);
-  */
   pushMatrix();
   rotateX(degrees(141.053));
-  TextureRect ground = new TextureRect(groundImage, 8000, 8000);
+  TextureRect ground = new TextureRect(groundImage, 8000, 8000, new PVector(202, 141, 66));
   ground.display();
-  /*
-  translate(0, 0, 4000);
-  TextureRect ground1 = new TextureRect(groundImage, 8000, 8000);
-  ground1.display();
-  translate(0, 0, -8000);
-  TextureRect ground2 = new TextureRect(groundImage, 8000, 8000);
-  ground2.display();
-  */
   popMatrix();
   
   //houses

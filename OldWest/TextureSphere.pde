@@ -12,6 +12,7 @@ class TextureSphere {
   void display(){
     noStroke();
       beginShape(QUADS);
+      textureMode(NORMAL);
       texture(img);
       float uStep = TWO_PI / n;
       float vStep = PI/n;

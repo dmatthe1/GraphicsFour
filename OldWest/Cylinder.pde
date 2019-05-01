@@ -26,6 +26,7 @@ class Cylinder {
     noStroke();
     
     beginShape(QUAD_STRIP);
+    textureMode(IMAGE);
     texture(img);
     float x=0;
     float z=0;
