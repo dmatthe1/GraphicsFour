@@ -219,10 +219,6 @@ void movement(){
   if(key == 'w' || keyCode == UP){
      //go forward
      if(keyPressed){
-       /*
-       eyeVect.z -= 5;
-       centerVect.z -= 5;
-       */
        look.normalize();
        eyeVect = (eyeVect.copy()).add(look.copy().mult(s));
        centerVect = (centerVect.copy()).add(look.copy().mult(s));
@@ -231,10 +227,6 @@ void movement(){
    if(key == 's' || keyCode == DOWN){
      //go backwards
      if(keyPressed) {
-       /*
-       eyeVect.z += 5;
-       centerVect.z += 5;
-       */
        look.normalize();
        eyeVect = (eyeVect.copy()).sub(look.copy().mult(s));
        centerVect = (centerVect.copy()).sub(look.copy().mult(s));
@@ -243,10 +235,6 @@ void movement(){
    if(key == 'a' || keyCode == LEFT){
      //strafe left
      if(keyPressed) {
-       /*
-       centerVect.x -= 10;
-       eyeVect.x -= 10;
-       */
        side.normalize();
        eyeVect = (eyeVect.copy()).sub(side.copy().mult(s));
        centerVect = (centerVect.copy()).sub(side.copy().mult(s));
@@ -255,10 +243,6 @@ void movement(){
    if(key == 'd' || keyCode == RIGHT){
      //strafe right
      if(keyPressed) {
-       /*
-       centerVect.x += 10;
-       eyeVect.x += 10;
-       */
        side.normalize();
        eyeVect = (eyeVect.copy()).add(side.copy().mult(s));
        centerVect = (centerVect.copy()).add(side.copy().mult(s));
@@ -277,7 +261,6 @@ void movement(){
        centerVect.x -= 10;
      }
    }
-   //walkingPlayer.pause();
 }
 
 void playWalkingSound(){
