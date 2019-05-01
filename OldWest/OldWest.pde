@@ -78,7 +78,7 @@ void setup() {
 void draw() {
   //Background music
   oldTownPlayer.play();
-  
+
   //Background Settings
   background(bgX, bgY, bgZ);
   noFill();
